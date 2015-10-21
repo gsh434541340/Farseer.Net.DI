@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{619D386D-A5E6-49A7-8F99-02F6838080B0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FS.DI</RootNamespace>
+    <AssemblyName>Farseer.Net.DI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Farseer.Net, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Farseer.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DependencyEntry.cs" />
+    <Compile Include="DependencyLifetime.cs" />
+    <Compile Include="DependencyStyle.cs" />
+    <Compile Include="FarseerContainer.cs" />
+    <Compile Include="Core\IScopedResolverProvider.cs" />
+    <Compile Include="Register\IDependencyRegistration.cs" />
+    <Compile Include="Core\IDependencyRegister.cs" />
+    <Compile Include="Core\IDependencyRegisterProvider.cs" />
+    <Compile Include="Core\IDependencyResolver.cs" />
+    <Compile Include="Core\IDependencyResolverProvider.cs" />
+    <Compile Include="Core\IFarseerContainer.cs" />
+    <Compile Include="Register\ILifetimeRegistration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Register\DependencyRegistration.cs" />
+    <Compile Include="Register\DependencyRegistrationFactory.cs" />
+    <Compile Include="Register\DependencyRegister.cs" />
+    <Compile Include="Register\DependencyRegisterExtensions.cs" />
+    <Compile Include="Register\EnumerableRegistration.cs" />
+    <Compile Include="Register\IEnumerableRegistration.cs" />
+    <Compile Include="Register\IPropertyRegistration.cs" />
+    <Compile Include="Resolver\CallSiteCollection.cs" />
+    <Compile Include="Resolver\CallSite\CallSiteCollectionHelper.cs" />
+    <Compile Include="Resolver\CallSite\CallSiteHelper.cs" />
+    <Compile Include="Resolver\CallSite\CompileResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\ConstructorResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\DelegateResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\DependencyTableHelper.cs" />
+    <Compile Include="Resolver\CallSite\InstanceResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\NonConstructorResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\PropertyResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\ScopedResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\SingletonResolverCallSite.cs" />
+    <Compile Include="Resolver\CallSite\TransientResolverCallSite.cs" />
+    <Compile Include="Resolver\DependencyResolver.cs" />
+    <Compile Include="Resolver\DependencyResolverExtensions.cs" />
+    <Compile Include="Resolver\DependencyTable.cs" />
+    <Compile Include="Resolver\ICallSiteCollection.cs" />
+    <Compile Include="Resolver\IDependencyTable.cs" />
+    <Compile Include="Resolver\IResolverCallSite.cs" />
+    <Compile Include="Resolver\IResolverContext.cs" />
+    <Compile Include="Core\IScopedResolver.cs" />
+    <Compile Include="Resolver\ResolverContext.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
