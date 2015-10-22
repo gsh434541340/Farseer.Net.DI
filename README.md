@@ -5,7 +5,7 @@ Farseer.Net.DI
 -
 Farseer.Net.DI是一个轻量级、高性能的IoC容器，用于解耦和管理类之间的依赖关系。
 
-#####使用
+######使用
      /// 初始化容器
      IFarseerContainer container = new FarseerContainer();
      
@@ -23,7 +23,7 @@ Farseer.Net.DI是一个轻量级、高性能的IoC容器，用于解耦和管理
          IUserRepository repository = resolver.Resolve<IUserRepository>();
      }
 
-#####依赖注册
+######依赖注册
 
     ///  使用类型注册
     register.RegisterType<IUserRepository, UserRepository>();
@@ -50,7 +50,7 @@ Farseer.Net.DI是一个轻量级、高性能的IoC容器，用于解耦和管理
     ///  注册程序集中所有符合过滤条件的类型
     register.RegisterAssembly(Assembly.GetExecutingAssembly(), type => type.IsClass);
     
-####生命周期
+######生命周期
 
     ///  每次解析创建一个新的实例
     register.RegisterType<IUserRepository, UserRepository>().AsTransientLifetime();
@@ -61,7 +61,7 @@ Farseer.Net.DI是一个轻量级、高性能的IoC容器，用于解耦和管理
     ///  在同一作用域中为单例
     register.RegisterType<IUserRepository, UserRepository>().AsScopedLifetime();
     
-####依赖解析
+######依赖解析
 
     ///  解析实现特定接口的类型
     IUserRepository repository = resolver.Resolve<IUserRepository>();
@@ -69,7 +69,7 @@ Farseer.Net.DI是一个轻量级、高性能的IoC容器，用于解耦和管理
     ///  解析实现特定接口的所有类型
     IEnumerable<IDependency> dependencys = resolver.ResolveAll<IDependency>();
     
-####作用域
+######作用域
 
     using (IDependencyResolver resolver = container.CreateResolver())
     {
@@ -80,7 +80,7 @@ Farseer.Net.DI是一个轻量级、高性能的IoC容器，用于解耦和管理
         }
     }
 
-####自动属性注入
+######自动属性注入
 
     public class UserRepository : IUserRepository
     {
