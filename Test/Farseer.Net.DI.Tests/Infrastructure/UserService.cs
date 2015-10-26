@@ -4,6 +4,7 @@
     {
         private readonly IRepository<UserEntity> _userRepository;
 
+        [Core.IgnoreDependency]
         public ILogger Logger { get; set; }
         public UserService(IRepository<UserEntity> userRepository)
         {
