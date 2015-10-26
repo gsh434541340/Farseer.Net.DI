@@ -118,5 +118,13 @@ namespace FS.DI.Resolver.CallSite
             }
             throw new InvalidOperationException("类型\"" + type.FullName + "\"未找到合适的构造方法。");
         }
+
+        internal static Object[] GetConstructorParameters(this Type type, IDependencyTable dependencyTable, IDependencyResolver resolver)
+        {
+            return type.GetBastConstructor(dependencyTable).
+                    GetParameters().
+                    Select(p => resolver.Resolve(p.ParameterType)).
+                    ToArray();
+        }
     }
 }

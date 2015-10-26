@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
+ 
 namespace FS.DI.Resolver.CallSite
 {
     /// <summary>
@@ -31,7 +31,12 @@ namespace FS.DI.Resolver.CallSite
 
             if (constructor == null) throw new InvalidOperationException(implType.FullName + "不存在公共构造方法。");
 
-            context.CompleteValue = Expression.New(constructor, GetConstructorParameters(constructor, resolver));
+            var parameter = Expression.Parameter(typeof(object[]), "args");
+            var body = Expression.New(constructor, GetConstructorParameters(constructor, parameter));
+            var factory = Expression.Lambda<Func<IDependencyResolver, Object[], Object>>(body,
+               Expression.Parameter(typeof(IDependencyResolver)),
+               parameter);
+            context.CompleteValue = factory;
         }
 
         /// <summary>
@@ -39,11 +44,13 @@ namespace FS.DI.Resolver.CallSite
         /// </summary>
         /// <param name="constructor"></param>
         /// <returns></returns>
-        private IEnumerable<Expression> GetConstructorParameters(ConstructorInfo constructor, IDependencyResolver resolver)
+        private IEnumerable<Expression> GetConstructorParameters(ConstructorInfo constructor, ParameterExpression parameter)
         {
-            var lambdaParam = Expression.Parameter(typeof(object[]), "args");
-            return constructor.GetParameterTypes().Select(parameterType => 
-                 Expression.Constant(resolver.Resolve(parameterType), parameterType));
+            
+            return constructor.GetParameterTypes().Select((parameterType, index) =>
+                   Expression.Convert(Expression.ArrayIndex(
+                       parameter, Expression.Constant(index)),
+                       parameterType));
         }
     }
 }

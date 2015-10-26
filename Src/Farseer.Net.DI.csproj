@@ -48,6 +48,7 @@
     <Compile Include="DependencyStyle.cs" />
     <Compile Include="FarseerContainer.cs" />
     <Compile Include="Core\IScopedResolverProvider.cs" />
+    <Compile Include="IgnoreDependencyAttribute.cs" />
     <Compile Include="Register\IDependencyRegistration.cs" />
     <Compile Include="Core\IDependencyRegister.cs" />
     <Compile Include="Core\IDependencyRegisterProvider.cs" />

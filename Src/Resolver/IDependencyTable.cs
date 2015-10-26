@@ -17,7 +17,7 @@ namespace FS.DI.Resolver
 
         IDictionary<Tuple<IScopedResolver, Type, Type>, Object> ScopedTable { get; }
 
-        IDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object>> CompileTable { get; }
+        IDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object[], Object>> CompileTable { get; }
     }
 }
   

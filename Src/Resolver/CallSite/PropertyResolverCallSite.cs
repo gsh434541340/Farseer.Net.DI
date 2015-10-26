@@ -2,7 +2,7 @@
 using FS.DI.Core;
 using System;
 using System.Reflection;
-
+ 
 namespace FS.DI.Resolver.CallSite
 {
     /// <summary>
@@ -22,7 +22,10 @@ namespace FS.DI.Resolver.CallSite
             {
                 try
                 {
-                    PropertySetCacheManger.Cache(property, context.CompleteValue, resolver.Resolve(property.PropertyType));
+                    if (!property.IsDefined(typeof(IgnoreDependencyAttribute), false))
+                    {
+                        PropertySetCacheManger.Cache(property, context.CompleteValue, resolver.Resolve(property.PropertyType));
+                    }
                 }
                 catch (Exception ex)
                 {

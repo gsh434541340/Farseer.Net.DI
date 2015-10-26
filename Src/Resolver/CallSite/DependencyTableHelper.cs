@@ -1,6 +1,7 @@
 ﻿using FS.DI.Core;
 using System;
-
+using System.Linq;
+ 
 namespace FS.DI.Resolver.CallSite
 {
     /// <summary>
@@ -29,13 +30,13 @@ namespace FS.DI.Resolver.CallSite
         /// <summary>
         /// 获取或添加委托缓存
         /// </summary>
-        internal static Func<IDependencyResolver, Object> GetOrAddCompile(this IDependencyTable dependencyTable,
-                     DependencyEntry depencyEntry, Func<Type, Type, Func<IDependencyResolver, Object>> valueFactory)
+        internal static Func<IDependencyResolver, Object[], Object> GetOrAddCompile(this IDependencyTable dependencyTable,
+                     DependencyEntry depencyEntry, Func<Type, Type, Func<IDependencyResolver, Object[], Object>> valueFactory)
         {
             if (depencyEntry == null) throw new ArgumentNullException(nameof(depencyEntry));
 
             var key = DependencyTableHelper.GetCompileKey(depencyEntry);
-            Func<IDependencyResolver, Object> resultingValue;
+            Func<IDependencyResolver, Object[], Object> resultingValue;
             if (dependencyTable.CompileTable.TryGetValue(key, out resultingValue))
             {
                 return resultingValue;
@@ -48,10 +49,12 @@ namespace FS.DI.Resolver.CallSite
         /// </summary>
         internal static bool TryGetCompileValue(this IDependencyTable dependencyTable, IResolverContext context, IDependencyResolver resolver)
         {
-            Func<IDependencyResolver, Object> resultingValueFactory;
+            Func<IDependencyResolver,Object[], Object> resultingValueFactory;
             if (dependencyTable.CompileTable.TryGetValue(DependencyTableHelper.GetCompileKey(context.DependencyEntry), out resultingValueFactory))
             {
-                context.CompleteValue = resultingValueFactory(resolver);
+                var args = context.DependencyEntry.GetImplementationType().
+                    GetConstructorParameters(dependencyTable, resolver);              
+                context.CompleteValue = resultingValueFactory(resolver, args);
                 if (dependencyTable.HasPropertyEntryTable.ContainsKey(context.DependencyEntry))
                 {
                     new PropertyResolverCallSite().Resolver(context, resolver);

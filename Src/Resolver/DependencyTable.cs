@@ -12,7 +12,7 @@ namespace FS.DI.Resolver
     /// </summary>
     internal class DependencyTable : IDependencyTable
     {
-        public IDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object>> CompileTable { get; } = new ConcurrentDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object>>();
+        public IDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object[], Object>> CompileTable { get; } = new ConcurrentDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object[], Object>>();
 
         public IDictionary<Type, DependencyEntry> DependencyEntryTable { get; private set; }
 

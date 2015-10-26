@@ -1,6 +1,7 @@
 ﻿using FS.DI.Core;
+using System;
 using System.Linq.Expressions;
-
+ 
 namespace FS.DI.Resolver.CallSite
 {
     /// <summary>
@@ -15,7 +16,11 @@ namespace FS.DI.Resolver.CallSite
 
         public void Resolver(IResolverContext context, IDependencyResolver resolver)
         {
-            context.CompleteValue = Expression.New(context.DependencyEntry.ImplementationType);
+            var body = Expression.New(context.DependencyEntry.ImplementationType);
+            var factory = Expression.Lambda<Func<IDependencyResolver, Object[], Object>>(body,
+                Expression.Parameter(typeof(IDependencyResolver)),
+                Expression.Parameter(typeof(Object[])));
+            context.CompleteValue = factory;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 
 namespace FS.DI.Resolver.CallSite
-{
+{ 
     /// <summary>
     /// 编译解析器
     /// </summary>
@@ -26,8 +26,11 @@ namespace FS.DI.Resolver.CallSite
             try
             {
                 var factory = _dependencyTable.GetOrAddCompile(context.DependencyEntry,
-                    (serviceType, iImplementationType) => CreateDelegate((Expression)context.CompleteValue));
-                var completeValue = factory.Invoke(resolver);
+                    (serviceType, iImplementationType) => (CreateDelegate(context.CompleteValue as Expression)));
+
+                Object[] args = GetParameters(context, _dependencyTable, resolver);
+     
+                var completeValue = factory.Invoke(resolver, args);
                 context.CompleteValue = completeValue;
                 CacheComplete(context, resolver);
                 context.Complete = !_dependencyTable.HasPropertyEntryTable.ContainsKey(context.DependencyEntry);        
@@ -38,18 +41,21 @@ namespace FS.DI.Resolver.CallSite
             }
         }
 
+        private Object[] GetParameters(IResolverContext context, IDependencyTable dependencyTable, IDependencyResolver resolver)
+        {
+            return context.HasImplementationDelegate() ?
+                    new Object[0] :
+                    context.DependencyEntry.GetImplementationType().
+                    GetConstructorParameters(_dependencyTable, resolver);
+        }
         /// <summary>
         /// 编译表达式树生成委托
         /// </summary>
         /// <param name="body"></param>
         /// <returns></returns>
-        private Func<IDependencyResolver, Object> CreateDelegate(Expression body)
+        private Func<IDependencyResolver, Object[], Object> CreateDelegate(Expression body)
         {
-            var parameter = body is InvocationExpression
-                ? ((InvocationExpression)body).Arguments.Select(e => (ParameterExpression)e).ToArray()
-                : new[] { Expression.Parameter(typeof(IDependencyResolver), "resolver") };
-            var lambda = Expression.Lambda<Func<IDependencyResolver, Object>>(body, parameter);
-            return lambda.Compile();
+            return (body as Expression<Func<IDependencyResolver, Object[], Object>>).Compile();
         }
 
         private void CacheComplete(IResolverContext context, IDependencyResolver resolver)
