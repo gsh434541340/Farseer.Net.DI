@@ -96,5 +96,12 @@ Farseer.Net.DI是一个轻量级、高性能的IoC容器，用于解耦和管理
         ///  解析依赖，属性自动注入
         IUserRepository repository = resolver.Resolve<IUserRepository>();
     }
-    
+######忽略自动属性
+
+     ///IgnoreDependency标记的属性将不会被自动注入
+     [IgnoreDependency]
+     public class UserRepository : IUserRepository
+     {
+        public ILogger Logger { get; set; }
+     }
     
