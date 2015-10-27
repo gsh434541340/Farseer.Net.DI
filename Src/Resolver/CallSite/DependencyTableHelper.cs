@@ -12,19 +12,9 @@ namespace FS.DI.Resolver.CallSite
         /// <summary>
         /// 获取作用域缓存的key
         /// </summary>
-        internal static Tuple<IScopedResolver, Type, Type> GetScopedKey(IResolverContext context, IDependencyResolver resolver)
+        internal static Tuple<IScopedResolver, DependencyEntry> GetScopedKey(IResolverContext context, IDependencyResolver resolver)
         {
-            return new Tuple<IScopedResolver, Type, Type>((IScopedResolver)resolver,
-               context.DependencyEntry.ServiceType,
-               context.DependencyEntry.GetImplementationType());
-        }
-
-        /// <summary>
-        /// 获取委托缓存的key
-        /// </summary>
-        internal static Tuple<Type, Type> GetCompileKey(DependencyEntry depencyEntry)
-        {
-            return new Tuple<Type, Type>(depencyEntry.ServiceType, depencyEntry.GetImplementationType());
+            return new Tuple<IScopedResolver, DependencyEntry>((IScopedResolver)resolver, context.DependencyEntry);
         }
 
         /// <summary>
@@ -35,13 +25,12 @@ namespace FS.DI.Resolver.CallSite
         {
             if (depencyEntry == null) throw new ArgumentNullException(nameof(depencyEntry));
 
-            var key = DependencyTableHelper.GetCompileKey(depencyEntry);
             Func<IDependencyResolver, Object[], Object> resultingValue;
-            if (dependencyTable.CompileTable.TryGetValue(key, out resultingValue))
+            if (dependencyTable.CompileTable.TryGetValue(depencyEntry, out resultingValue))
             {
                 return resultingValue;
             }
-            return (dependencyTable.CompileTable[key] = valueFactory(key.Item1, key.Item2));
+            return (dependencyTable.CompileTable[depencyEntry] = valueFactory(depencyEntry.ServiceType, depencyEntry.GetImplementationType()));
         }
 
         /// <summary>
@@ -50,18 +39,17 @@ namespace FS.DI.Resolver.CallSite
         internal static bool TryGetCompileValue(this IDependencyTable dependencyTable, IResolverContext context, IDependencyResolver resolver)
         {
             Func<IDependencyResolver,Object[], Object> resultingValueFactory;
-            if (dependencyTable.CompileTable.TryGetValue(DependencyTableHelper.GetCompileKey(context.DependencyEntry), out resultingValueFactory))
+            if (dependencyTable.CompileTable.TryGetValue(context.DependencyEntry, out resultingValueFactory))
             {
                 var args = context.DependencyEntry.GetImplementationType().
                     GetConstructorParameters(dependencyTable, resolver);              
                 context.CompleteValue = resultingValueFactory(resolver, args);
                 if (dependencyTable.HasPropertyEntryTable.ContainsKey(context.DependencyEntry))
                 {
-                    new PropertyResolverCallSite().Resolver(context, resolver);
-                }
-                return true;
+                    new PropertyResolverCallSite(dependencyTable).Resolver(context, resolver);
+                }        
             }
-            return false;
+            return context.Complete;
         }
 
         /// <summary>

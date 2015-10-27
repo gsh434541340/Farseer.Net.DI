@@ -12,7 +12,7 @@ namespace FS.DI.Resolver
         /// </summary>
         internal static ICallSiteCollection AddDefault(this ICallSiteCollection callSiteCollection, IDependencyTable dependencyTable)
         {
-            callSiteCollection.Add(new PropertyResolverCallSite());
+            callSiteCollection.Add(new PropertyResolverCallSite(dependencyTable));
             callSiteCollection.Add(new CompileResolverCallSite(dependencyTable));
             callSiteCollection.Add(new ConstructorResolverCallSite(dependencyTable));
             callSiteCollection.Add(new NonConstructorResolverCallSite());

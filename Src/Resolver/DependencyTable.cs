@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
+ 
 namespace FS.DI.Resolver
 {
     /// <summary>
@@ -12,11 +12,11 @@ namespace FS.DI.Resolver
     /// </summary>
     internal class DependencyTable : IDependencyTable
     {
-        public IDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object[], Object>> CompileTable { get; } = new ConcurrentDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object[], Object>>();
+        public IDictionary<DependencyEntry, Func<IDependencyResolver, Object[], Object>> CompileTable { get; } = new ConcurrentDictionary<DependencyEntry, Func<IDependencyResolver, Object[], Object>>();
 
         public IDictionary<Type, DependencyEntry> DependencyEntryTable { get; private set; }
 
-        public IDictionary<Tuple<IScopedResolver, Type, Type>, Object> ScopedTable { get; } = new ConcurrentDictionary<Tuple<IScopedResolver, Type, Type>, Object>();
+        public IDictionary<Tuple<IScopedResolver, DependencyEntry>, Object> ScopedTable { get; private set; }
 
         public IDictionary<Type, DependencyEntry> PropertyEntryTable { get; private set; }
 
@@ -25,6 +25,8 @@ namespace FS.DI.Resolver
         public DependencyTable(IEnumerable<DependencyEntry> dependencyEntrys)
         {
             if (dependencyEntrys == null) throw new ArgumentNullException(nameof(dependencyEntrys));
+
+            ScopedTable = new ConcurrentDictionary<Tuple<IScopedResolver, DependencyEntry>, Object>();
 
             DependencyEntryTable = new ConcurrentDictionary<Type, DependencyEntry>(
                 dependencyEntrys.

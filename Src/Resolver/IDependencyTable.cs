@@ -1,7 +1,7 @@
 ﻿using FS.DI.Core;
 using System;
 using System.Collections.Generic;
-
+ 
 namespace FS.DI.Resolver
 {
     /// <summary>
@@ -15,9 +15,9 @@ namespace FS.DI.Resolver
 
         IDictionary<DependencyEntry, bool> HasPropertyEntryTable { get; }
 
-        IDictionary<Tuple<IScopedResolver, Type, Type>, Object> ScopedTable { get; }
+        IDictionary<Tuple<IScopedResolver, DependencyEntry>, Object> ScopedTable { get; }
 
-        IDictionary<Tuple<Type, Type>, Func<IDependencyResolver, Object[], Object>> CompileTable { get; }
+        IDictionary<DependencyEntry, Func<IDependencyResolver, Object[], Object>> CompileTable { get; }
     }
 }
   

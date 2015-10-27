@@ -1,6 +1,7 @@
 ﻿using FS.Cache;
 using FS.DI.Core;
 using System;
+using System.Linq;
 using System.Reflection;
  
 namespace FS.DI.Resolver.CallSite
@@ -10,6 +11,12 @@ namespace FS.DI.Resolver.CallSite
     /// </summary>
     internal sealed class PropertyResolverCallSite : IResolverCallSite
     {
+        private readonly IDependencyTable _dependencyTable;
+        public PropertyResolverCallSite(IDependencyTable dependencyTable)
+        {
+            if (dependencyTable == null) throw new ArgumentNullException(nameof(dependencyTable));
+            _dependencyTable = dependencyTable;
+        }
         public bool PreResolver(IResolverContext context, IDependencyResolver resolver)
         {
             return context.NotComplete();
@@ -17,7 +24,8 @@ namespace FS.DI.Resolver.CallSite
 
         public void Resolver(IResolverContext context, IDependencyResolver resolver)
         {
-            var properties = context.CompleteValue.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = context.CompleteValue.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).
+                Where(property => _dependencyTable.PropertyEntryTable.ContainsKey(property.PropertyType));
             foreach (var property in properties)
             {
                 try

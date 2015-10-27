@@ -9,5 +9,5 @@
         /// 创建作用域解析器
         /// </summary>
         IScopedResolver CreateScopedResolver();
-    }
+    } 
 }

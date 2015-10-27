@@ -55,6 +55,13 @@ namespace FS.DI.Resolver.CallSite
         /// <returns></returns>
         private Func<IDependencyResolver, Object[], Object> CreateDelegate(Expression body)
         {
+            //var parameter = body is InvocationExpression
+            //    ? ((InvocationExpression)body).Arguments.Select(e => (ParameterExpression)e).ToArray()
+            //    : new[] { Expression.Parameter(typeof(IDependencyResolver), "resolver") };
+            //var a = body as NewExpression;
+
+            //var lambda = Expression.Lambda<Func<IDependencyResolver, Object>>(body, parameter);
+            //return lambda.Compile();
             return (body as Expression<Func<IDependencyResolver, Object[], Object>>).Compile();
         }
 
